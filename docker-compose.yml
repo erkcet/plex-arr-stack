@@ -1,0 +1,197 @@
+services:
+
+  # ============================================================================
+  # MEDIA SERVER
+  # ============================================================================
+
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - VERSION=docker
+      - PLEX_CLAIM=${PLEX_CLAIM}
+    volumes:
+      - ${CONFIG_DIR}/plex:/config
+      - ${DATA_DIR}/media:/data/media
+    devices:
+      - /dev/dri:/dev/dri  # Intel/AMD hardware transcoding — remove if not needed
+    restart: unless-stopped
+
+  # ============================================================================
+  # PVR / MEDIA MANAGEMENT
+  # ============================================================================
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_DIR}/sonarr:/config
+      - ${DATA_DIR}:/data
+    ports:
+      - "8989:8989"
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_DIR}/radarr:/config
+      - ${DATA_DIR}:/data
+    ports:
+      - "7878:7878"
+    restart: unless-stopped
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_DIR}/lidarr:/config
+      - ${DATA_DIR}:/data
+    ports:
+      - "8686:8686"
+    restart: unless-stopped
+
+  # ============================================================================
+  # INDEXER MANAGEMENT
+  # ============================================================================
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_DIR}/prowlarr:/config
+    ports:
+      - "9696:9696"
+    restart: unless-stopped
+
+  # ============================================================================
+  # DOWNLOAD CLIENT
+  # ============================================================================
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+    volumes:
+      - ${CONFIG_DIR}/qbittorrent:/config
+      - ${DATA_DIR}/torrents:/data/torrents
+    ports:
+      - "8080:8080"
+      - "6881:6881"
+      - "6881:6881/udp"
+    restart: unless-stopped
+
+  # ============================================================================
+  # EXTRAS
+  # ============================================================================
+
+  autobrr:
+    image: ghcr.io/autobrr/autobrr:latest
+    container_name: autobrr
+    environment:
+      - TZ=${TZ}
+    user: "${PUID}:${PGID}"
+    volumes:
+      - ${CONFIG_DIR}/autobrr:/config
+    ports:
+      - "7474:7474"
+    restart: unless-stopped
+
+  unpackerr:
+    image: ghcr.io/unpackerr/unpackerr:latest
+    container_name: unpackerr
+    environment:
+      - TZ=${TZ}
+      # Sonarr
+      - UN_SONARR_0_URL=http://sonarr:8989
+      - UN_SONARR_0_API_KEY=${SONARR_API_KEY}
+      - UN_SONARR_0_PATHS_0=/data/torrents/tv
+      # Radarr
+      - UN_RADARR_0_URL=http://radarr:7878
+      - UN_RADARR_0_API_KEY=${RADARR_API_KEY}
+      - UN_RADARR_0_PATHS_0=/data/torrents/movies
+      # Lidarr
+      - UN_LIDARR_0_URL=http://lidarr:8686
+      - UN_LIDARR_0_API_KEY=${LIDARR_API_KEY}
+      - UN_LIDARR_0_PATHS_0=/data/torrents/music
+    volumes:
+      - ${DATA_DIR}/torrents:/data/torrents
+    restart: unless-stopped
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_DIR}/bazarr:/config
+      - ${DATA_DIR}/media:/data/media
+    ports:
+      - "6767:6767"
+    restart: unless-stopped
+
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: tautulli
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_DIR}/tautulli:/config
+    ports:
+      - "8181:8181"
+    restart: unless-stopped
+
+  notifiarr:
+    image: golift/notifiarr:latest
+    container_name: notifiarr
+    hostname: notifiarr
+    environment:
+      - DN_API_KEY=${NOTIFIARR_API_KEY}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_DIR}/notifiarr:/config
+      - /var/run/utmp:/var/run/utmp
+    ports:
+      - "5454:5454"
+    restart: unless-stopped
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${CONFIG_DIR}/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "3000:3000"
+    restart: unless-stopped

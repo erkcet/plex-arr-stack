@@ -1,0 +1,21 @@
+---
+# Homepage — Layout & Settings
+# Copy to ${CONFIG_DIR}/homepage/settings.yaml
+
+title: Media Server
+
+theme: dark
+color: slate
+
+headerStyle: clean
+
+layout:
+  Media:
+    columns: 1
+    style: row
+  Management:
+    columns: 3
+  Indexers & Downloads:
+    columns: 3
+  Monitoring:
+    columns: 3

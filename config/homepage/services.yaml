@@ -1,0 +1,85 @@
+---
+# Homepage — Service Cards
+# Copy to ${CONFIG_DIR}/homepage/services.yaml
+# Replace API keys and URLs with your actual values.
+
+- Media:
+    - Plex:
+        icon: plex.svg
+        href: http://your-server-ip:32400/web
+        description: Media Server
+        widget:
+          type: tautulli
+          url: http://tautulli:8181
+          key: YOUR_TAUTULLI_API_KEY
+
+- Management:
+    - Sonarr:
+        icon: sonarr.svg
+        href: http://your-server-ip:8989
+        description: TV Shows
+        widget:
+          type: sonarr
+          url: http://sonarr:8989
+          key: YOUR_SONARR_API_KEY
+    - Radarr:
+        icon: radarr.svg
+        href: http://your-server-ip:7878
+        description: Movies
+        widget:
+          type: radarr
+          url: http://radarr:7878
+          key: YOUR_RADARR_API_KEY
+    - Lidarr:
+        icon: lidarr.svg
+        href: http://your-server-ip:8686
+        description: Music
+        widget:
+          type: lidarr
+          url: http://lidarr:8686
+          key: YOUR_LIDARR_API_KEY
+
+- Indexers & Downloads:
+    - Prowlarr:
+        icon: prowlarr.svg
+        href: http://your-server-ip:9696
+        description: Indexer Manager
+        widget:
+          type: prowlarr
+          url: http://prowlarr:9696
+          key: YOUR_PROWLARR_API_KEY
+    - qBittorrent:
+        icon: qbittorrent.svg
+        href: http://your-server-ip:8080
+        description: Downloads
+        widget:
+          type: qbittorrent
+          url: http://qbittorrent:8080
+          username: YOUR_QBIT_USERNAME
+          password: YOUR_QBIT_PASSWORD
+    - Autobrr:
+        icon: autobrr.svg
+        href: http://your-server-ip:7474
+        description: IRC Autodl
+
+- Monitoring:
+    - Tautulli:
+        icon: tautulli.svg
+        href: http://your-server-ip:8181
+        description: Plex Monitoring
+        widget:
+          type: tautulli
+          url: http://tautulli:8181
+          key: YOUR_TAUTULLI_API_KEY
+    - Bazarr:
+        icon: bazarr.svg
+        href: http://your-server-ip:6767
+        description: Subtitles
+        widget:
+          type: bazarr
+          url: http://bazarr:6767
+          key: YOUR_BAZARR_API_KEY
+    - Notifiarr:
+        icon: notifiarr.svg
+        href: http://your-server-ip:5454
+        description: Notifications
